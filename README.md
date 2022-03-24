@@ -13,6 +13,16 @@ Explora cómo funcionan los objetos en JavaScript a profundidad. Descubre cómo 
 
 ### 1. ¿Qué hay dentro de los objetos en JavaScript?
 
+Requisitos:
+
+- Closure y Scope
+- Fundamentos POO
+- POO básico en JS
+
+## Profundicemos en Objetos
+
+ ### 2. Static: atributos y métodos estáticos en JavaScript
+
 Hasta ahora habíamos aprendido que apara acceder a los métodos o atributos de una clase o prototipo teníamos que crear una instancia del prototipo(Objeto). Pero hay una forma de que podemos saltarnos tener que crear una instancia del prototipo para acceder a los métodos o atributos, esta es la forma **Static**
 
 Para crear atributos estáticos los cuales podamos acceder sin crear un objeto o una instancia de este prototipo, solo hay que agregar al atributo la palabra `static`
@@ -132,10 +142,53 @@ Si recordamos del curso anterior, el objetivo del encapsulamiento es limitiar qu
 
 Ahora con las propiedades **writable, configurable, enumerable** podemos limitar quien tiene acceso, modificar nuestros objetos.
 
-## Profundicemos en Objetos
-
- ### 2. Static: atributos y métodos estáticos en JavaScript
  ### 3. Métodos estáticos del prototipo Object
+
+Al “desconponer” el objeto con Object.entries y al producir una array de arrays con los atributos y metodos del objeto, el ambito lexico cambia y por ende la palabra reservada **this** funciona en un contexto diferente al inicial.
+
+```js
+const juan = {
+    name: 'Juan',
+    age: 18,
+    approvedCourses: ['Java', 'JavaScript'],
+    addCourse(newCourse){
+        console.log('This: ', this);
+        console.log(this.approvedCourses);
+        this.approvedCourses.push(newCourse);
+    },
+};
+
+console.log(Object.keys(juan));
+console.log(Object.values(juan));
+console.log(Object.getOwnPropertyNames(juan));
+//Si tratamos de acceder al método addCourse usando entries
+//Nos dará error, ya que en ese caso this.approvedCourses
+//Ya no hace referencia a juan, sino al array que contiene los entries
+console.log(Object.entries(juan));
+juan.addCourse('GoLang');
+//este código no funcionará
+//this.approvedCourses será undefined
+Object.entries(juan)[3][1]('PHP');
+
+
+console.log(Object.getOwnPropertyDescriptors(juan));
+
+//Object.defineProperty(obj, prop, descriptor)
+//obj, es el objeto sobre el cual se define la propiedad
+//prop, nombre de la propiedad definida o modificada
+//descriptor, es de la propiedad que esta siendo definida
+Object.defineProperty(juan, 'pruebaNasa', {
+    value: 'Extraterrestres',
+    enumerable: true,
+    writable: true,
+    configurable: true,
+});
+
+console.log(Object.getOwnPropertyDescriptors(juan));
+```
+
+> Mas información sobre Object: [Object MDN Mozilla](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
  ### 4. Object.defineProperty
 
 ## Cómo copiar objetos en JavaScript
