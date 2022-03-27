@@ -32,9 +32,38 @@ console.log(Object.getOwnPropertyDescriptors(juan));
 //descriptor, es de la propiedad que esta siendo definida
 Object.defineProperty(juan, 'pruebaNasa', {
     value: 'Extraterrestres',
-    enumerable: true,
+    enumerable: false,
+    writable: false,
+    configurable: false,
+});
+
+Object.defineProperty(juan, 'navigator', {
+    value: 'Chrome',
+    enumerable: false,
     writable: true,
     configurable: true,
 });
+
+Object.defineProperty(juan, 'editor', {
+    value: 'VSCode',
+    enumerable: true,
+    writable: false,
+    configurable: true,
+});
+
+Object.defineProperty(juan, 'terminal', {
+    value: 'Bash',
+    enumerable: true,
+    writable: true,
+    configurable: false,
+});
+
+//Cambia configurable a false
+//no permite borrar las propiedades
+Object.seal(juan);
+
+//cambia configurable y writable a false
+//no permite editar ni borrar las propiedades
+Object.freeze(juan);
 
 console.log(Object.getOwnPropertyDescriptors(juan));
