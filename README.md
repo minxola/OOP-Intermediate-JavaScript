@@ -400,7 +400,149 @@ const obj2 = JSON.parse(stringifiedComplexObj);
 ## Recursividad en JavaScript
 
  ### 8. Qué es recursividad
+
+```js
+const numbers = [7,2,4,5,2,8,6];
+
+//forLoop.js
+//Usando ciclo for para mostrar los elementos del array
+let number;
+for(let i =  0; i < numbers.length; i++){
+    number = numbers[i];
+    console.log({i, number});
+}
+
+//recursive.js
+//Usando funciones para mostrar los elementos del array
+function recursive (myArray){
+    if(myArray.length != 0){
+        const firstNum = myArray[0];
+        console.log(firstNum);
+        myArray.shift();
+        recursive(myArray);
+    }
+}
+
+recursive(numbers);
+```
+
  ### 9. Deep copy con recursividad
+
+**Deep copy** de un objeto, es una copia en la cual sus propiedades no comparten referencias con el objeto desde donde fue copiado. De tal manera que al hacer cualquier cambio en el objeto copiado no afecta el objeto fuente y viceversa. Con esto podemos estar seguros que al cambiar un objeto no estamos modificando inintencionalmente al objeto desde donde fue copiado.
+
+```js
+const obj1 = {
+    a: 'a',
+    b: 'b',
+    c: {
+        d: 'd',
+        e: 'e'
+    },
+    f: [3, 4],
+    editA(){
+        this.a = 'AAAAAA';
+    }
+}
+
+console.log(obj1);
+
+function isObject(param){
+    return typeof param == "object";
+}
+
+function isArray(param){
+    return Array.isArray(param);
+}
+
+//función que realiza el deep copy con recursividad
+function deepCopy(subject){
+    //declaramos la copia del objeto como 'undefined'
+    let copySubject;
+	
+    //para saber si es un objeto o array
+    const subjectIsObject = isObject(subject);
+    const subjectIsArray = isArray(subject);
+
+    //Define el resultado(objeti, array u otro)
+    if(subjectIsArray){
+        copySubject = [];
+    } else if(subjectIsObject){
+        copySubject = {};
+    } else {
+        return subject;
+    }
+
+    for(key in subject){
+        const keyIsObject = isObject(subject[key]);
+		
+    	//aplica recursividad, en caso de un objeto dentro de otro 		objeto
+        if(keyIsObject){
+            copySubject[key] = deepCopy(subject[key]);
+        } else {
+            if(subjectIsArray){
+                copySubject.push(subject[key]);
+            } else {
+                copySubject[key] = subject[key];
+            }
+        }
+    }
+
+    //devuelve la copia del objeto
+    return copySubject;
+}
+
+//Creando el deep copy de objeto 1
+const obj2 = deepCopy(obj1);
+console.log(obj2);
+```
+
+Otras funciones mas resumidas que hacen los mismo:
+
+```js
+function typeOfElement(element){
+    switch(Object.prototype.toString.call(element)){
+        case "[object Object]": return "object";
+        case "[object Array]": return "array";
+        default: return "Does not matter";
+    }
+}
+
+function deepCopy(element){
+    let elementType = typeOfElement(element);
+
+    //Si no es array ni objeto, retorna element
+    if(elementType !== "array" && elementType !== "object") return element;
+
+    //solo para el caso de ser array u objeto, usa copy
+    let copy;
+    if(elementType === "array") copy = [];
+    if(elementType === "object") copy = {};
+
+    for(item in element){
+        copy[item] = deepCopy(element[item]);
+    }
+
+    return copy;
+}
+```
+
+O esta función super resumida que hace lo mismo:
+
+```js
+const deepCopy = (e) => {
+    if(!isObject(e)) return e;
+
+    const copy = isArray(e) ? [] : {};
+
+    for(i in e){
+        const current = e[i];
+
+        copy[i] = isObject(current) ? deepCopy(current) : current;
+    }
+
+    return copy;
+}
+```
 
 ## Abstracción y encapsulamiento sin prototipos
 
